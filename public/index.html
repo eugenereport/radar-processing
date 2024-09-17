@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en/ua">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Radar</title>
+
+    <script
+      src="https://cdn.plot.ly/plotly-2.35.2.min.js"
+      charset="utf-8"
+    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div id="presentBlock" class="box">
+      <h1>Радар</h1>
+      <p align="center">
+        <b>Розробка додатку для візуалізації вимірювань радару</b>
+      </p>
+      <p align="center">Виконав студент: Прокопенко Євгеній ІПЗ-4.04</p>
+      <p align="center">
+        з дисципліни: <b>"Розробка та програмування координатних систем"</b>
+      </p>
+    </div>
+
+    <div id="plot" class="box"></div>
+
+    <form id="radarConfigForm" class="box">
+      <div class="inputsBox">
+        <div class="inputContainer">
+          <label for="measurementsPerRotation"
+            >Кількість вимірювань на один оберт (рази):</label
+          >
+          <input
+            type="text"
+            id="measurementsPerRotation"
+            name="measurementsPerRotation"
+          />
+          <div id="errorMeasurements" class="error"></div>
+        </div>
+
+        <div class="inputContainer">
+          <label for="rotationSpeed">Швидкість обертання (RPM):</label>
+          <input type="text" id="rotationSpeed" name="rotationSpeed" />
+          <div id="errorRotationSpeed" class="error"></div>
+        </div>
+
+        <div class="inputContainer">
+          <label for="targetSpeed">Швидкість цілей (км/год):</label>
+          <input type="text" id="targetSpeed" name="targetSpeed" />
+          <div id="errorTargetSpeed" class="error"></div>
+        </div>
+      </div>
+
+      <button type="submit">Надіслати</button>
+    </form>
+
+    <script type="module">
+      import { RadarService } from "/src/RadarService.js";
+      import { RadarGraph } from "/src/RadarGraph.js";
+      import { RadarConfig } from "/src/RadarConfig.js";
+
+      let radarServiceProps = {
+        configUrl: "http://localhost:3000/api/config",
+        socketUrl: "ws://localhost:4000",
+        eventName: "radarDataReceived",
+      };
+
+      const radarService = new RadarService(radarServiceProps);
+
+      let radarGraphProps = {
+        plotId: "plot",
+        eventName: "radarDataReceived",
+      };
+
+      const radarGraph = new RadarGraph(radarGraphProps);
+
+      const formElement = document.getElementById("radarConfigForm");
+
+      const radarConfig = new RadarConfig(formElement, function (formData) {
+        radarService.updateConfiguration(formData);
+      });
+
+      async function main() {
+
+        // Отримання конфігурації радара
+        await radarService.fetchConfiguration();
+
+        // Підключення до веб-сокета
+        radarService.connectWebSocket();
+
+        // Запуск циклу будування радара
+        radarGraph.init(radarService.config);
+
+        // Заповнення форми конфігурації радара
+        radarConfig.setConfig(radarService.config);
+      }
+
+      $(document).ready(function () {
+        main();
+      });
+    </script>
+  </body>
+</html>

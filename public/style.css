@@ -1,0 +1,81 @@
+body {
+  background-color: #1c1d1e;
+  color: lime;
+  font-family: "Courier New", Courier, monospace;
+}
+
+#plot {
+  width: 650px; /* Ширина графика */
+  height: 500px; /* Высота графика */
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 4px 2px 6px 4px rgba(3, 6, 29, 0.27);
+  margin: 50px auto 0 auto;
+}
+
+.box {
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 4px 2px 6px 4px rgba(3, 6, 29, 0.27);
+  background-color: #131416;
+}
+
+#radarConfigForm {
+  width: 80%;
+  margin: 20px auto 0 auto;
+  padding: 20px;
+  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+}
+
+#radarConfigForm button {
+  border-radius: 10px;
+  padding: 10px;
+  margin-left: auto;
+  outline: 1px solid lime;
+  color: lime;
+  background-color: #1c1d1e;
+}
+
+#radarConfigForm button:hover {
+  background-color: #1e3f3c;
+}
+
+.inputsBox {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-evenly;
+}
+
+.inputContainer {
+  width: 250px;
+}
+
+.inputContainer > * {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.inputContainer input {
+  width: 90%;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.inputContainer :focus {
+  outline: 1px solid lime;
+}
+
+.error {
+  font-size: 12px;
+  color: red;
+}
+
+#presentBlock {
+  width: 600px;
+  margin: 20px auto 0 auto;
+  text-align: center;
+  font-size: 12px;
+}
